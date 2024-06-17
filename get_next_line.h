@@ -6,7 +6,7 @@
 /*   By: leaugust <leaugust@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 22:25:00 by leaugust          #+#    #+#             */
-/*   Updated: 2024/06/17 19:50:04 by leaugust         ###   ########.fr       */
+/*   Updated: 2024/06/17 20:21:04 by leaugust         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,6 @@ char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_strdup(const char *s);
 char	*ft_strchr(const char *s, int c);
 size_t	ft_strlen(const char *s);
+char	*initialize_buf(int fd, char **stash);
 
 #endif

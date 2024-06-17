@@ -6,7 +6,7 @@
 /*   By: leaugust <leaugust@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 22:24:30 by leaugust          #+#    #+#             */
-/*   Updated: 2024/06/17 20:09:04 by leaugust         ###   ########.fr       */
+/*   Updated: 2024/06/17 20:21:22 by leaugust         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,34 @@
 
 /*#include <stdio.h>*/
 
+#include "get_next_line.h"
+
+char	*set_line(char *line_buffer)
+{
+	char	*stash;
+	size_t	i;
+
+	i = 0;
+	while (line_buffer[i] && line_buffer[i] != '\n')
+		i++;
+	if (line_buffer[i] == '\0')
+		return (NULL);
+	stash = ft_substr(line_buffer, i + 1, ft_strlen(line_buffer) - (i + 1));
+	if (!stash)
+		return (NULL);
+	if (*stash == '\0')
+	{
+		free(stash);
+		return (NULL);
+	}
+	line_buffer[i + 1] = '\0';
+	return (stash);
+}
+
 char	*fill_line_buffer(int fd, char *stash, char *buffer)
 {
-	int		bytes_read;
 	char	*temp;
+	int		bytes_read;
 
 	bytes_read = 1;
 	while (bytes_read > 0)
@@ -26,7 +50,7 @@ char	*fill_line_buffer(int fd, char *stash, char *buffer)
 		if (bytes_read == -1)
 		{
 			free(stash);
-			return (stash);
+			stash = NULL;
 			return (NULL);
 		}
 		if (bytes_read == 0)
@@ -43,27 +67,31 @@ char	*fill_line_buffer(int fd, char *stash, char *buffer)
 	return (stash);
 }
 
-char	*set_line(char *line_buffer)
+char	*initialize_buf(int fd, char **stash)
 {
-	size_t	i;
-	char	*stash;
+	char	*buffer;
 
-	i = 0;
-	while (line_buffer[i] != '\n' && line_buffer[i])
-		i++;
-	if (line_buffer[i] == '\0')
-		return (NULL);
-	stash = ft_substr(line_buffer, i + 1, ft_strlen(line_buffer) - (i + 1));
-	if (!stash)
-		return (NULL);
-	if (*stash == '\0')
+	if (fd < 0 || BUFFER_SIZE < 0)
 	{
-		free(stash);
-		stash = NULL;
+		if (*stash)
+		{
+			free(stash);
+			*stash = NULL;
+		}
 		return (NULL);
 	}
-	line_buffer[i + 1] = '\0';
-	return (stash);
+	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!buffer || read(fd, buffer, 0) < 0)
+	{
+		if (*stash)
+		{
+			free(*stash);
+			*stash = NULL;
+		}
+		free(buffer);
+		return (NULL);
+	}
+	return (buffer);
 }
 
 char	*get_next_line(int fd)
@@ -73,24 +101,9 @@ char	*get_next_line(int fd)
 	char		*buffer;
 	char		*temp;
 
-	if (fd < 0 || BUFFER_SIZE < 0)
-	{
-		if (stash)
-		{
-			free(stash);
-			stash = NULL;
-		}
+	buffer = initialize_buf(fd, &stash);
+	if (!buffer)
 		return (NULL);
-	}
-	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!buffer || read(fd, buffer, 0) < 0)
-	{
-		free(stash);
-		free(buffer);
-		stash = NULL;
-		buffer = NULL;
-		return (NULL);
-	}
 	line = fill_line_buffer(fd, stash, buffer);
 	free(buffer);
 	if (!line)
