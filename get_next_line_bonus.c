@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: leaugust <leaugust@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/16 22:24:30 by leaugust          #+#    #+#             */
-/*   Updated: 2024/06/17 20:09:04 by leaugust         ###   ########.fr       */
+/*   Created: 2024/06/17 14:46:19 by leaugust          #+#    #+#             */
+/*   Updated: 2024/06/17 20:10:01 by leaugust         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 /*#include <stdio.h>*/
 
@@ -68,34 +68,34 @@ char	*set_line(char *line_buffer)
 
 char	*get_next_line(int fd)
 {
-	static char	*stash = NULL;
+	static char	*stash[MAX_FD];
 	char		*line;
 	char		*buffer;
 	char		*temp;
 
 	if (fd < 0 || BUFFER_SIZE < 0)
 	{
-		if (stash)
+		if (stash[fd])
 		{
-			free(stash);
-			stash = NULL;
+			free(stash[fd]);
+			stash[fd] = NULL;
 		}
 		return (NULL);
 	}
 	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buffer || read(fd, buffer, 0) < 0)
 	{
-		free(stash);
+		free(stash[fd]);
 		free(buffer);
-		stash = NULL;
+		stash[fd] = NULL;
 		buffer = NULL;
 		return (NULL);
 	}
-	line = fill_line_buffer(fd, stash, buffer);
+	line = fill_line_buffer(fd, stash[fd], buffer);
 	free(buffer);
 	if (!line)
 		return (NULL);
-	stash = set_line(line);
+	stash[fd] = set_line(line);
 	temp = ft_strdup(line);
 	free(line);
 	return (temp);
@@ -103,8 +103,11 @@ char	*get_next_line(int fd)
 /*
 int	main(void)
 {
-	int fd = open("fichier.txt", O_RDONLY);
-	char *line = get_next_line(-1);
+	int		fd;
+	char	*line;
+
+	fd = open("fichier.txt", O_RDONLY);
+	line = get_next_line(-1);
 	if (line == NULL)
 		printf("null\n");
 	else
