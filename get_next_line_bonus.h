@@ -6,7 +6,7 @@
 /*   By: leaugust <leaugust@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 14:45:39 by leaugust          #+#    #+#             */
-/*   Updated: 2024/06/17 15:29:38 by leaugust         ###   ########.fr       */
+/*   Updated: 2024/06/20 16:21:31 by leaugust         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,12 @@
 # define GET_NEXT_LINE_BONUS_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
+#  define BUFFER_SIZE 100
 # endif
-# define MAX_FD 1024
+
+# ifndef MAX_FD
+#  define MAX_FD 1024
+# endif
 
 # include <fcntl.h>
 # include <stddef.h>
@@ -32,6 +35,6 @@ char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_strdup(const char *s1);
 char	*ft_strchr(const char *s, int c);
 size_t	ft_strlen(const char *s);
-void	test(void) __attribute__((destructor));
+char	*initialize_buf(int fd, char **stash);
 
 #endif

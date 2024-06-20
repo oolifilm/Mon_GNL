@@ -6,13 +6,11 @@
 /*   By: leaugust <leaugust@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 14:46:19 by leaugust          #+#    #+#             */
-/*   Updated: 2024/06/17 20:10:01 by leaugust         ###   ########.fr       */
+/*   Updated: 2024/06/20 16:18:40 by leaugust         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
-
-/*#include <stdio.h>*/
 
 char	*fill_line_buffer(int fd, char *stash, char *buffer)
 {
@@ -66,6 +64,33 @@ char	*set_line(char *line_buffer)
 	return (stash);
 }
 
+char	*initialize_buf(int fd, char **stash)
+{
+	char	*buffer;
+
+	if (fd < 0 || BUFFER_SIZE < 0)
+	{
+		if (*stash)
+		{
+			free(stash);
+			*stash = NULL;
+		}
+		return (NULL);
+	}
+	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!buffer || read(fd, buffer, 0) < 0)
+	{
+		if (*stash)
+		{
+			free(*stash);
+			*stash = NULL;
+		}
+		free(buffer);
+		return (NULL);
+	}
+	return (buffer);
+}
+
 char	*get_next_line(int fd)
 {
 	static char	*stash[MAX_FD];
@@ -73,24 +98,9 @@ char	*get_next_line(int fd)
 	char		*buffer;
 	char		*temp;
 
-	if (fd < 0 || BUFFER_SIZE < 0)
-	{
-		if (stash[fd])
-		{
-			free(stash[fd]);
-			stash[fd] = NULL;
-		}
+	buffer = initialize_buf(fd, &stash[fd]);
+	if (!buffer)
 		return (NULL);
-	}
-	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!buffer || read(fd, buffer, 0) < 0)
-	{
-		free(stash[fd]);
-		free(buffer);
-		stash[fd] = NULL;
-		buffer = NULL;
-		return (NULL);
-	}
 	line = fill_line_buffer(fd, stash[fd], buffer);
 	free(buffer);
 	if (!line)
@@ -100,28 +110,3 @@ char	*get_next_line(int fd)
 	free(line);
 	return (temp);
 }
-/*
-int	main(void)
-{
-	int		fd;
-	char	*line;
-
-	fd = open("fichier.txt", O_RDONLY);
-	line = get_next_line(-1);
-	if (line == NULL)
-		printf("null\n");
-	else
-	{
-		printf("%s", line);
-		free(line);
-	}
-	line = get_next_line(fd);
-	if (line == NULL)
-		printf("null\n");
-	else
-	{
-		printf("%s", line);
-		free(line);
-	}
-	return (0);
-}*/

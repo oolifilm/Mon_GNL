@@ -6,13 +6,9 @@
 /*   By: leaugust <leaugust@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 22:24:30 by leaugust          #+#    #+#             */
-/*   Updated: 2024/06/17 20:21:22 by leaugust         ###   ########.fr       */
+/*   Updated: 2024/06/20 16:16:12 by leaugust         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "get_next_line.h"
-
-/*#include <stdio.h>*/
 
 #include "get_next_line.h"
 
@@ -96,7 +92,7 @@ char	*initialize_buf(int fd, char **stash)
 
 char	*get_next_line(int fd)
 {
-	static char	*stash = NULL;
+	static char	*stash;
 	char		*line;
 	char		*buffer;
 	char		*temp;
@@ -113,25 +109,3 @@ char	*get_next_line(int fd)
 	free(line);
 	return (temp);
 }
-/*
-int	main(void)
-{
-	int fd = open("fichier.txt", O_RDONLY);
-	char *line = get_next_line(-1);
-	if (line == NULL)
-		printf("null\n");
-	else
-	{
-		printf("%s", line);
-		free(line);
-	}
-	line = get_next_line(fd);
-	if (line == NULL)
-		printf("null\n");
-	else
-	{
-		printf("%s", line);
-		free(line);
-	}
-	return (0);
-}*/
