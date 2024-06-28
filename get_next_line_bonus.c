@@ -6,7 +6,7 @@
 /*   By: leaugust <leaugust@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 14:46:19 by leaugust          #+#    #+#             */
-/*   Updated: 2024/06/20 16:18:40 by leaugust         ###   ########.fr       */
+/*   Updated: 2024/06/24 21:03:17 by leaugust         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ char	*initialize_buf(int fd, char **stash)
 {
 	char	*buffer;
 
-	if (fd < 0 || BUFFER_SIZE < 0)
+	if (fd < 0 || fd >= MAX_FD || BUFFER_SIZE < 0)
 	{
 		if (*stash)
 		{

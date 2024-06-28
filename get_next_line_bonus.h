@@ -6,7 +6,7 @@
 /*   By: leaugust <leaugust@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 14:45:39 by leaugust          #+#    #+#             */
-/*   Updated: 2024/06/20 16:21:31 by leaugust         ###   ########.fr       */
+/*   Updated: 2024/06/24 21:03:28 by leaugust         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,6 @@
 #  define MAX_FD 1024
 # endif
 
-# include <fcntl.h>
-# include <stddef.h>
-# include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
 
